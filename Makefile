@@ -191,6 +191,7 @@ UPROGS=\
 	_t_va_to_pa1\
 	_t_va_to_pa2\
 	_t_getpgtablesz\
+	_t_getpasize\
 
 fs.img: mkfs README pingpong.txt $(UPROGS)
 	./mkfs fs.img README pingpong.txt $(UPROGS)

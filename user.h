@@ -31,6 +31,7 @@ int va_to_pa(int);
 int get_pgtb_size(void);
 int get_usr_pgtb_size(void);
 int get_kernel_pgtb_size(void);
+int getpasize(int);
 
 // ulib.c
 int stat(const char *, struct stat *);

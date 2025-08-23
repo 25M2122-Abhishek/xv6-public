@@ -28,3 +28,4 @@
 #define SYS_get_pgtb_size 27
 #define SYS_get_usr_pgtb_size 28
 #define SYS_get_kernel_pgtb_size 29
+#define SYS_getpasize 30

@@ -459,7 +459,7 @@ int sys_getvasize(void)
   int pid;
   if(argint(0, &pid) < 0)
     return -1;
-  cprintf("Value of n read in kernel space %d and address is %d\n", pid, &pid);
+  // cprintf("Value of n read in kernel space %d and address is %d\n", pid, &pid);
   return getvasize(pid);
 }
 
@@ -469,4 +469,12 @@ int sys_va_to_pa(void)
   if(argint(0, &va) < 0)
     return -1;
   return va_to_pa(va);
+}
+
+int sys_getpasize(void)
+{
+  int pid;
+  if(argint(0, &pid) < 0)
+    return -1;
+  return getpasize(pid);
 }

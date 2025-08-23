@@ -639,9 +639,17 @@ int spawn(int n, int *pids)
 
 
 int getvasize(int pid){
-  struct proc *curproc = myproc();
-  cprintf("Bottom of kernel stack for this process: %d \n", (uint)curproc->kstack);
-  return curproc->sz;
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if (p->pid == pid) {
+      break;
+    }
+  }
+  release(&ptable.lock);
+  // cprintf("Bottom of kernel stack for this process: %d \n", (uint)curproc->kstack);
+  return p->sz;
 }
 
 int va_to_pa(int va){
@@ -686,4 +694,36 @@ int get_usr_pgtb_size(){
 
 int get_kernel_pgtb_size(){
   return count_pt_pages(myproc()->pgdir, PDX(KERNBASE), NPDENTRIES);
+}
+
+int getpasize(int pid){
+  struct proc *p;
+  pde_t *pgdir;
+  int cnt = 0;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if (p->pid == pid) {
+      pgdir = p->pgdir;
+      break;
+    }
+  }
+  release(&ptable.lock);
+
+  if (p == &ptable.proc[NPROC] || pgdir == 0)
+    return -1; 
+  for (int i = 0; i < PDX(KERNBASE); i++) {
+    pde_t *pde = &pgdir[i];
+    if (*pde & PTE_P){
+      pte_t *pgtab = (pte_t*)P2V(PTE_ADDR(*pde));
+      for (int j = 0; j < NPTENTRIES; j++){
+        if (pgtab[j] & PTE_P){
+          uint pa = PTE_ADDR(pgtab[j]);
+          if (pa != 0)
+            cnt++;
+        }
+      }
+    }
+  }
+  return cnt;
 }
