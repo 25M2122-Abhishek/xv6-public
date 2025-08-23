@@ -38,10 +38,10 @@ struct cpu*
 mycpu(void)
 {
   int apicid, i;
-  
+
   if(readeflags()&FL_IF)
     panic("mycpu called with interrupts enabled\n");
-  
+
   apicid = lapicid();
   // APIC IDs are not guaranteed to be contiguous. Maybe we should have
   // a reverse map, or reserve a register to store &cpus[i].
@@ -124,7 +124,7 @@ userinit(void)
   extern char _binary_initcode_start[], _binary_initcode_size[];
 
   p = allocproc();
-  
+
   initproc = p;
   if((p->pgdir = setupkvm()) == 0)
     panic("userinit: out of memory?");
@@ -183,7 +183,7 @@ fork(void)
   int i, pid;
   struct proc *np;
   //current process which is calling fork(), retrieved using myproc()
-  struct proc *curproc = myproc(); 
+  struct proc *curproc = myproc();
 
   // Allocate process.
   if((np = allocproc()) == 0){
@@ -281,7 +281,7 @@ wait(void)
   struct proc *p;
   int havekids, pid;
   struct proc *curproc = myproc();
-  
+
   acquire(&ptable.lock);
   for(;;){
     // Scan through table looking for exited children.
@@ -294,7 +294,7 @@ wait(void)
         // Found one.
         pid = p->pid;
 
-        // free the child’s kernel stack memory (allocated with kalloc()/kfree() in xv6). 
+        // free the child’s kernel stack memory (allocated with kalloc()/kfree() in xv6).
         // The kernel stack is per-process and must be freed when the slot is reclaimed.
         kfree(p->kstack);
         p->kstack = 0;
@@ -337,7 +337,7 @@ scheduler(void)
   struct proc *p;
   struct cpu *c = mycpu();
   c->proc = 0;
-  
+
   for(;;){
     // Enable interrupts on this processor.
     sti();
@@ -430,7 +430,7 @@ void
 sleep(void *chan, struct spinlock *lk)
 {
   struct proc *p = myproc();
-  
+
   if(p == 0)
     panic("sleep");
 
@@ -552,11 +552,11 @@ message(void)
   return 0;
 }
 
-int 
+int
 numberofrunnables(void){
   struct proc *p;
   int n = 0;
-  
+
   acquire(&ptable.lock);
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -592,11 +592,11 @@ numberofrunnables(void){
 int spawn(int n, int *pids)
 {
     int count = 0;
-    struct proc *curproc = myproc(); 
+    struct proc *curproc = myproc();
     for(int c=0;c<n;c++){
-        int i, pid;   
+        int i, pid;
         struct proc *np;
-        
+
         // Allocate new process
         if((np = allocproc()) == 0){
             continue;
@@ -611,7 +611,7 @@ int spawn(int n, int *pids)
         np->sz = curproc->sz;
         np->parent = curproc;
         *np->tf = *curproc->tf;
-        
+
         // Clear %eax so that spawn returns 0 in the child.
         np->tf->eax = 0;
 
@@ -664,4 +664,26 @@ int va_to_pa(int va){
 
   pa |= va & 0xFFF;
   return pa;
+}
+
+int count_pt_pages(pde_t *pgdir, int startPdx, int endPdx)
+{
+  int cnt = 0;
+  for (int i = startPdx; i < endPdx; i++) {
+    pde_t pde = pgdir[i];
+    if (pde & PTE_P) cnt++;
+  }
+  return cnt;
+}
+
+int get_pgtb_size(){
+  return count_pt_pages(myproc()->pgdir, 0, NPDENTRIES);
+}
+
+int get_usr_pgtb_size(){
+  return count_pt_pages(myproc()->pgdir, 0, PDX(KERNBASE));
+}
+
+int get_kernel_pgtb_size(){
+  return count_pt_pages(myproc()->pgdir, PDX(KERNBASE), NPDENTRIES);
 }

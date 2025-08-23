@@ -101,3 +101,21 @@ sys_numberofreadyprocesses(void)
 {
   return numberofrunnables();
 }
+
+int
+sys_get_pgtb_size(void)
+{
+  return get_pgtb_size();
+}
+
+int
+sys_get_usr_pgtb_size(void)
+{
+  return get_usr_pgtb_size();
+}
+
+int
+sys_get_kernel_pgtb_size(void)
+{
+  return get_kernel_pgtb_size();
+}

@@ -108,6 +108,9 @@ extern int sys_numberofreadyprocesses(void);
 extern int sys_spawn(void);
 extern int sys_getvasize(void);
 extern int sys_va_to_pa(void);
+extern int sys_get_pgtb_size(void);
+extern int sys_get_usr_pgtb_size(void);
+extern int sys_get_kernel_pgtb_size(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -136,6 +139,9 @@ static int (*syscalls[])(void) = {
 [SYS_spawn] sys_spawn,
 [SYS_getvasize] sys_getvasize,
 [SYS_va_to_pa] sys_va_to_pa,
+[SYS_get_pgtb_size] sys_get_pgtb_size,
+[SYS_get_usr_pgtb_size] sys_get_usr_pgtb_size,
+[SYS_get_kernel_pgtb_size] sys_get_kernel_pgtb_size,
 };
 
 void

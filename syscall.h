@@ -25,3 +25,6 @@
 #define SYS_spawn 24
 #define SYS_getvasize 25
 #define SYS_va_to_pa 26
+#define SYS_get_pgtb_size 27
+#define SYS_get_usr_pgtb_size 28
+#define SYS_get_kernel_pgtb_size 29

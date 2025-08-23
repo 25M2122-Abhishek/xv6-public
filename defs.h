@@ -125,6 +125,9 @@ int             numberofrunnables(void);
 int             spawn(int, int*);
 int             getvasize(int);
 int             va_to_pa(int);
+int             get_pgtb_size(void);
+int             get_usr_pgtb_size(void);
+int             get_kernel_pgtb_size(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
