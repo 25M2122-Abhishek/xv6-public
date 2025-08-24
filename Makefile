@@ -194,6 +194,7 @@ UPROGS=\
 	_t_getpasize\
 	_t_pagefault\
 	_t_mmap\
+	_t_lazy\
 
 fs.img: mkfs README pingpong.txt $(UPROGS)
 	./mkfs fs.img README pingpong.txt $(UPROGS)

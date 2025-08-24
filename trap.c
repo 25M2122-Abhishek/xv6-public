@@ -78,11 +78,26 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-    cprintf(
-      "Page fault in pid %d (%s), addr=0x%x, err=%d, eip=0x%x\n",
-      myproc()->pid, myproc()->name, rcr2(), tf->err, tf->eip
-    );
-    myproc()->killed = 1;
+    uint va = rcr2();
+    struct proc *p = myproc();
+    if (va >= KERNBASE || va >= p-> sz){
+      cprintf(
+        "Page fault in pid %d (%s), addr=0x%x, err=%d, eip=0x%x\n",
+        myproc()->pid, myproc()->name, rcr2(), tf->err, tf->eip
+      );
+      p->killed = 1;
+      break;
+    }
+    cprintf("Allocating Memory on Demand...\n");
+    if(allocpage(p->pgdir, rcr2()) < 0){
+      cprintf(
+        "Lazy allocation failed in pid %d (%s), addr=0x%x, err=%d, eip=0x%x\n",
+        myproc()->pid, myproc()->name, rcr2(), tf->err, tf->eip
+      );
+      p->killed = 1;
+      break;
+    }
+    switchuvm(p);
     break;
 
   //PAGEBREAK: 13
