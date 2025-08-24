@@ -727,3 +727,21 @@ int getpasize(int pid){
   }
   return cnt;
 }
+
+int
+mmap(int nbytes)
+{
+  uint oldsz = myproc()->sz;
+  uint newsz;
+
+  if(nbytes <= 0 || nbytes % PGSIZE != 0)
+    return 0;
+
+  newsz = oldsz + nbytes;
+  if(newsz >= KERNBASE)
+    return 0;
+
+  myproc()->sz = newsz;
+
+  return oldsz;
+}

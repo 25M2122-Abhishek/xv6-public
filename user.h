@@ -32,6 +32,7 @@ int get_pgtb_size(void);
 int get_usr_pgtb_size(void);
 int get_kernel_pgtb_size(void);
 int getpasize(int);
+int mmap(int);
 
 // ulib.c
 int stat(const char *, struct stat *);

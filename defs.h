@@ -129,6 +129,7 @@ int             get_pgtb_size(void);
 int             get_usr_pgtb_size(void);
 int             get_kernel_pgtb_size(void);
 int             getpasize(int);
+int             mmap(int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

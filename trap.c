@@ -79,8 +79,8 @@ trap(struct trapframe *tf)
     break;
   case T_PGFLT:
     cprintf(
-      "Page fault in pid %d (%s), addr=0x%x, err=%d\n",
-      myproc()->pid, myproc()->name, rcr2(), tf->err
+      "Page fault in pid %d (%s), addr=0x%x, err=%d, eip=0x%x\n",
+      myproc()->pid, myproc()->name, rcr2(), tf->err, tf->eip
     );
     myproc()->killed = 1;
     break;

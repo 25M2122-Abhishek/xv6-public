@@ -478,3 +478,11 @@ int sys_getpasize(void)
     return -1;
   return getpasize(pid);
 }
+
+int sys_mmap(void)
+{
+  int nbytes;
+  if(argint(0, &nbytes) < 0)
+    return -1;
+  return mmap(nbytes);
+}
