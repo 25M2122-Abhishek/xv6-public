@@ -77,6 +77,13 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT:
+    cprintf(
+      "Page fault in pid %d (%s), addr=0x%x, err=%d\n",
+      myproc()->pid, myproc()->name, rcr2(), tf->err
+    );
+    myproc()->killed = 1;
+    break;
 
   //PAGEBREAK: 13
   default:
