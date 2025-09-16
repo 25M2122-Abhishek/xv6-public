@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     // In child we want to see the virtual and physical address of n
     printf(1, "Virtual address of Var N in child    %p\n", va);
     printf(1, "Physical address on Var N in child   %p\n", va_to_pa(va));
-    printf(1, "========================================================");
+    printf(1, "========================================================\n");
   }
   else
   {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     wait();
     printf(1, "Virtual address of Var N in parent   %p\n", va);
     printf(1, "Physical address on Var N in parent  %p\n", va_to_pa(va));
-    printf(1, "========================================================");
+    printf(1, "========================================================\n");
   }
   exit();
 }
